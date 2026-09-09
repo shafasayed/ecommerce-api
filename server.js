@@ -3,6 +3,7 @@ const pool = require('./db');
 const session = require('express-session');
 const PgSession = require('connect-pg-simple')(session);
 const authRouter = require('./auth');
+const usersRouter = require('./users');
 
 const app = express();
 const PORT = 3000;
@@ -14,7 +15,7 @@ if (!process.env.SESSION_SECRET) {
 // Read JSON request bodies.
 app.use(express.json());
 
-// Remember logged-in users using sessions stored in PostgreSQL.
+// Store login sessions in PostgreSQL.
 app.use(
   session({
     store: new PgSession({
@@ -33,8 +34,9 @@ app.use(
   })
 );
 
-// Registration and login routes.
+// Connect the routers after session middleware.
 app.use('/auth', authRouter);
+app.use('/users', usersRouter);
 
 app.get('/', (req, res) => {
   res.json({ message: 'Welcome to my e-commerce API!' });
