@@ -53,7 +53,10 @@ app.use(
     saveUninitialized: false,
     cookie: {
       httpOnly: true,
-      sameSite: 'lax',
+      // The API and client are on different domains in production, so the
+      // cookie needs SameSite=None to be sent on cross-site requests.
+      // Browsers require Secure whenever SameSite=None is used.
+      sameSite: isProduction ? 'none' : 'lax',
       secure: isProduction,
       maxAge: 1000 * 60 * 60
     }
