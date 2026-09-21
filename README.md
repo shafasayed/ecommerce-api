@@ -3,8 +3,18 @@
 A Codecademy portfolio project built with Node.js, Express, and PostgreSQL.
 
 This application provides a backend API for managing accounts, products,
-shopping carts, and orders. It does not include a storefront or process
-real payments.
+shopping carts, and orders, with Stripe handling payment during checkout.
+It pairs with a separate React frontend,
+[ecommerce-client](https://github.com/shafasayed/ecommerce-client).
+
+## Live demo
+
+- API: https://ecommerce-api-oyot.onrender.com
+- Frontend: https://ecommerce-client-ucsk.onrender.com
+- API docs: https://ecommerce-api-oyot.onrender.com/api-docs
+
+Both are hosted on Render's free tier. The API spins down after periods of
+inactivity, so the first request after a while can take 30-60 seconds.
 
 ## Features
 
@@ -14,7 +24,7 @@ real payments.
 - Public product browsing
 - Admin-only product creation, updates, and deletion
 - Personal shopping carts and item quantities
-- Checkout with stock validation and database transactions
+- Checkout with Stripe payment, stock validation, and database transactions
 - Order viewing, cancellation, and deletion
 - Swagger API documentation
 
@@ -287,13 +297,22 @@ database name, username, host, port, and password if required.
 
 ## Scope and future improvements
 
-This is a local learning project, not a production payment system.
+This is a learning project, not a production system.
 
 Potential improvements include automated integration and concurrency tests,
 pagination, password reset, email verification, login rate limiting,
-CSRF protection, and payment integration.
+CSRF protection, and third-party login (Google/Facebook) — skipped here to
+keep the project scoped to a single working session.
 
-A deployed version also needs HTTPS and secure-cookie configuration.
+### Known limitation: session login on Safari
+
+The API and frontend are deployed on two different Render domains. Safari's
+tracking-prevention rules block cookies set this way ("third-party cookies")
+more aggressively than other browsers, so a logged-in session may not
+persist across page loads there, even though login itself succeeds and
+works correctly in other browsers. The properly production-ready fix is to
+replace cookie-based sessions with a token sent in an Authorization header,
+which isn't subject to third-party cookie rules.
 
 ## What I learned
 
