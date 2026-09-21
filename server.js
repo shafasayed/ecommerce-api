@@ -1,4 +1,5 @@
 const express = require('express');
+const cors = require('cors');
 const pool = require('./db');
 const session = require('express-session');
 const PgSession = require('connect-pg-simple')(session);
@@ -20,6 +21,12 @@ if (!process.env.SESSION_SECRET) {
 }
 
 app.disable('x-powered-by');
+app.use(
+  cors({
+    origin: 'http://localhost:5173',
+    credentials: true
+  })
+);
 app.use(express.json({ limit: '100kb' }));
 
 app.use(
