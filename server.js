@@ -14,16 +14,29 @@ const checkoutRouter = require('./checkout');
 const ordersRouter = require('./orders');
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
+const isProduction = process.env.NODE_ENV === 'production';
 
 if (!process.env.SESSION_SECRET) {
   throw new Error('Add SESSION_SECRET to your .env file');
 }
 
+// Render sits behind a reverse proxy that terminates HTTPS.
+// This tells Express to trust its X-Forwarded-Proto header,
+// which secure cookies need to work correctly.
+if (isProduction) {
+  app.set('trust proxy', 1);
+}
+
+const allowedOrigins = [
+  'http://localhost:5173',
+  process.env.CLIENT_ORIGIN
+].filter(Boolean);
+
 app.disable('x-powered-by');
 app.use(
   cors({
-    origin: 'http://localhost:5173',
+    origin: allowedOrigins,
     credentials: true
   })
 );
@@ -41,7 +54,7 @@ app.use(
     cookie: {
       httpOnly: true,
       sameSite: 'lax',
-      secure: false,
+      secure: isProduction,
       maxAge: 1000 * 60 * 60
     }
   })

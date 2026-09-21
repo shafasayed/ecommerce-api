@@ -3,6 +3,7 @@ const pool = require('./db');
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
 const router = express.Router();
+const clientOrigin = process.env.CLIENT_ORIGIN || 'http://localhost:5173';
 
 // Creates the order from the user's cart inside a transaction:
 // checks stock, creates the order and its items, reduces stock,
@@ -196,8 +197,8 @@ router.post('/checkout/session', async (req, res, next) => {
         }
       })),
       success_url:
-        'http://localhost:5173/checkout/success?session_id={CHECKOUT_SESSION_ID}',
-      cancel_url: 'http://localhost:5173/cart',
+        `${clientOrigin}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${clientOrigin}/cart`,
       metadata: { userId: String(req.session.userId) }
     });
 
