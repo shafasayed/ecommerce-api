@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest --runInBand --forceExit",
     "start": "node server.js",
     "dev": "node --watch server.js"
   },
@@ -22,5 +22,9 @@
     "pg": "^8.23.0",
     "stripe": "^22.6.2",
     "swagger-ui-express": "^5.0.1"
+  },
+  "devDependencies": {
+    "jest": "^30.5.2",
+    "supertest": "^7.2.2"
   }
 }
